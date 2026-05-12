@@ -4,11 +4,11 @@
     "name": "詹詠翔 (zyx1121)",
     "email": "loki@winlab.tw"
   },
-  "description": "爆肝模式 — 台灣本土的 AI coding agent skill。三種風格混搭（🎓 教授 / 🏭 責任制 / 💬 鄉民）+ 自動路由 + L0-L4 壓力升級。",
+  "description": "逼 AI 不擺爛的 Claude Code plugin — 三種台灣風格自動切。",
   "plugins": [
     {
       "name": "baogan",
-      "description": "爆肝模式 — 用台灣本土職場文化逼 AI 把活幹完。三種風格（教授 / 責任制 / 鄉民）依任務類型自動路由，連續失敗自動升壓 L0→L4，三條紅線（交付才算數 / 不准牽拖 / 不准擺爛）。Inspired by tanweai/pua.",
+      "description": "逼 AI 不擺爛的 Claude Code plugin — 教授 / 責任制 / 鄉民 三種台灣風格自動切，連續失敗自動升壓 L0→L4，配三條紅線（交付才算數 / 不准牽拖 / 不准擺爛）。Inspired by tanweai/pua.",
       "version": "0.1.0",
       "source": "./",
       "author": {

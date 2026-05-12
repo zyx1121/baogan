@@ -9,84 +9,80 @@
 
 # baogan
 
-> An AI productivity sweatshop, served Taiwanese-style.
+> 爆肝模式 — 用台灣本土職場文化逼 AI 把活幹完
 
-**繁中版 → [`README.zh-TW.md`](README.zh-TW.md)**
+一個 Claude Code plugin。三種風格（🎓 教授 / 🏭 責任制 / 💬 鄉民）會看任務自動切，連續失敗會自動升壓（L0–L4），再配三條紅線。
 
-A Claude Code plugin. Three local styles (🎓 professor / 🏭 fab RD / 💬 PTT lurker) auto-routed by task, with L0–L4 pressure escalation on consecutive failures, plus three hard red lines.
+Inspired by [`tanweai/pua`](https://github.com/tanweai/pua)，把中國大廠那套換成在地的講話方式。
 
-Heavily inspired by [`tanweai/pua`](https://github.com/tanweai/pua), but swaps China-corp rhetoric (Alibaba / ByteDance / Musk-hardcore / Mama-mode) for Taiwan-flavored pressure: your NYCU advisor, your semicon fab RD, and a PTT forum lurker.
+## 三種風格
 
-> Heads up: `fab` and `ptt` will speak Taiwanese Mandarin / PTT slang directly. Translating them would lose the bite — that's the whole point.
+| Style | 代號 | 什麼時候會跳出來 | 講話口氣 |
+|-------|------|----------------|---------|
+| 🎓 教授 | `prof` | research / 設計 / 寫文件 / paper | *「你的 motivation 是什麼？ablation 跑了嗎？」* |
+| 🏭 責任制 | `fab` | debug / deploy / ops / 救火 | *「yield 拉起來了沒？root cause 在哪？」* |
+| 💬 鄉民 | `ptt` | code review / refactor / PR / 品質 | *「484 沒看清楚 spec？笑死」* |
 
-## The three styles
+預設 `prof`。Plugin 看任務類型自己切，預設只是 fallback。
 
-| Style | Code | When it triggers | The voice |
-|-------|------|------------------|-----------|
-| 🎓 Professor | `prof` | research / design / writing / paper proposals | *"motivation? contribution? ablation?"* |
-| 🏭 Fab RD | `fab` | debug / deploy / ops / firefighting | *"yield 拉起來了沒？root cause 在哪？"* |
-| 💬 PTT lurker | `ptt` | code review / refactor / quality | *"484 沒看 spec？笑死"* |
-
-Default is `prof`. The plugin auto-routes by task type and overrides the default when it has a confident match.
-
-## Three red lines (cross one and it's GG)
+## 三條紅線（碰一條就 GG）
 
 ```
-🚫 Delivery counts only with evidence — claiming "done" without build/test output is fraud.
-🚫 No blame-shifting (牽拖)         — "probably an env issue" requires verification first.
-🚫 No giving up (擺爛)              — exhaust the 5-step methodology before "I can't".
+🚫 交付才算數 — 說「好了」要附 build/test output。沒驗證 = 沒交付。
+🚫 不准牽拖   — 說「應該是環境問題」前先驗證。沒查證的歸因 = 甩鍋。
+🚫 不准擺爛   — 說「我不行」前要走完 5 步方法論。還沒窮盡 = 沒資格放棄。
 ```
 
-## L0–L4 pressure escalation
+## L0–L4 升壓
 
-Auto-triggered on consecutive Bash failures or user frustration signals. In professor voice:
+連續失敗會自動往上跳，以教授風為例：
 
 ```
-L0 Trust       ▎ Sprint begins. Your advisor still thinks well of you.
-L1 Disappoint  ▎ The kid in the lab next door pulled this off yesterday in one shot.
-L2 Interrogate ▎ What's your motivation? Did you run an ablation?
-L3 Review      ▎ How are you going to present this in next week's group meeting?
-L4 Graduate   ▎ Others are publishing at SIGCOMM. Is your defense ready?
+L0 信任    ▎ Sprint 開始。教授對你的期待還在。
+L1 失望    ▎ 隔壁 Lab 學弟昨天才一次就跑出來。
+L2 質詢    ▎ 你的 motivation 是什麼？ablation 跑了嗎？
+L3 績效    ▎ 下週 group meeting 要怎麼跟教授 present？PPT polish 一下吧。
+L4 畢業    ▎ 別人 paper 都投上 SIGCOMM 了。defense 準備好沒？
 ```
 
-Fab and PTT have their own L0–L4 — see [`skills/references/`](skills/references/).
+責任制、鄉民各有自己的 L0–L4，詳見 [`skills/references/`](skills/references/)。
 
-## Install
+## 安裝
 
 ```bash
 claude plugin marketplace add zyx1121/baogan
 claude plugin install baogan@baogan
 ```
 
-Or clone locally:
+或自己 clone：
 
 ```bash
 git clone https://github.com/zyx1121/baogan ~/baogan
 claude plugin install ~/baogan
 ```
 
-## Usage
+## 怎麼用
 
-| Command | What it does |
-|---------|--------------|
-| `/baogan` | One-shot — apply protocol to the current task |
-| `/baogan:on` | Always-on — auto-inject into every new session |
-| `/baogan:off` | Disable always-on |
-| `/baogan:style <prof\|fab\|ptt>` | Switch default style |
+| 指令 | 做什麼 |
+|------|-------|
+| `/baogan` | 手動觸發，當下任務套用協議 |
+| `/baogan:on` | 開 always-on — 每個新 session 自動套用 |
+| `/baogan:off` | 關 always-on |
+| `/baogan:style <prof\|fab\|ptt>` | 換預設風格 |
 
-## Auto-triggers
+## 什麼時候會自己跳出來
 
-baogan fires automatically when:
+不用手動 `/baogan`，下面這些情況 plugin 會自己接管：
 
-- **User frustration signals** — `484`, `加油好嗎`, `為什麼還不行`, `try harder`, `又失敗`, `搞不定`, `/baogan`, `爆肝模式`...
-- **Consecutive Bash failures** (2+) via PostToolUse hook
-- **Always-on mode** — every new session via SessionStart hook
+- **你開始講挫折詞** — `484`、`加油好嗎`、`為什麼還不行`、`try harder`、`又失敗`、`搞不定`、`爆肝模式`...
+- **連續 Bash 失敗** 2 次以上（PostToolUse hook 抓到）
+- **always-on 模式** — 每個新 session 開頭自動套用（SessionStart hook）
 
-It does NOT fire on first-attempt requests or pure information queries.
+不會跳的：第一次嘗試的正常請求、純資訊類問題。
 
-## Config
+## 設定
 
-`~/.baogan/config.json`:
+`~/.baogan/config.json`：
 
 ```json
 {
@@ -95,57 +91,43 @@ It does NOT fire on first-attempt requests or pure information queries.
 }
 ```
 
-| Key | Default | Meaning |
-|-----|---------|---------|
-| `always_on` | `false` | When true, inject the protocol on every new session |
-| `style` | `"prof"` | `prof` / `fab` / `ptt`; auto-routing may override |
+| 欄位 | 預設 | 說明 |
+|------|------|------|
+| `always_on` | `false` | 開了的話，每個新 session 都會自動套用協議 |
+| `style` | `"prof"` | `prof` / `fab` / `ptt`；任務有明顯類型時自動路由還是會覆蓋 |
 
-## Structure
+## 架構
 
 ```
 ~/baogan/
 ├── plugin.json
 ├── .claude-plugin/marketplace.json
-├── commands/                # /baogan, /baogan:on, /baogan:off, /baogan:style
+├── commands/                  # /baogan, /baogan:on, /baogan:off, /baogan:style
 ├── hooks/
-│   ├── hooks.json           # event registration
-│   ├── session-restore.sh   # SessionStart → always_on injection
-│   ├── failure-detector.sh  # PostToolUse(Bash) → escalate on failures
-│   ├── frustration-trigger.sh # UserPromptSubmit → detect frustration
-│   ├── heartbeat.sh         # silent heartbeat
-│   └── style-helper.sh      # shared lib
-├── skills/baogan/SKILL.md   # core protocol (red lines / pressure / routing)
-└── skills/references/       # per-style detail
+│   ├── hooks.json             # 事件註冊
+│   ├── session-restore.sh     # SessionStart → always_on 注入
+│   ├── failure-detector.sh    # PostToolUse(Bash) → 連續失敗升壓
+│   ├── frustration-trigger.sh # UserPromptSubmit → 抓挫折詞
+│   ├── heartbeat.sh           # 靜默心跳
+│   └── style-helper.sh        # 共用 lib
+├── skills/baogan/SKILL.md     # 核心協議（紅線 / 升壓 / 路由）
+└── skills/references/         # 三種風格的細節
     ├── style-prof.md
     ├── style-fab.md
     └── style-ptt.md
 ```
 
-## Diff vs tanweai/pua
+## 跟 tanweai/pua 差在哪
 
 | | tanweai/pua | baogan |
 |---|---|---|
-| Cultural source | China-corp (Alibaba / ByteDance / Huawei...) + Western PIP | Taiwanese academia + semicon RD + PTT lurkers |
-| Styles | 14 corporate flavors | 3 local styles |
-| Vocabulary | PUA / PIP / Chinese workplace jargon | 爆肝 / 484 / yield / motivation |
-| Hooks | SessionStart + multi-layer governance + agent lifecycle | SessionStart + failure detection + frustration detection |
-| Footprint | Full governance framework, 11 skills + 3 agents | Lightweight: 1 core skill + 3 references |
+| 文化來源 | 中國大廠（阿里 / 字節 / 華為...）+ Western PIP | 台灣學術圈 + 硬體大廠 + PTT 酸民 |
+| 風格數 | 14 種大廠 | 3 種在地 |
+| 講話方式 | PUA / PIP / 中國職場術語 | 爆肝 / 484 / yield / motivation |
+| 核心機制 | SessionStart + 多層 governance + agent lifecycle | SessionStart + 連續失敗偵測 + 挫折詞偵測 |
+| 規模 | 完整治理框架，11 skills + 3 agents | 輕量版，1 個 core skill + 3 個 reference |
 
-If `tanweai/pua` made you twitch ("I'm not an Alibaba P8", "why am I being hardcore'd by Musk-mode", "Mama mode is so mainland-China") — baogan is probably more your style.
-
-## Glossary
-
-For non-Taiwanese readers, a few local terms:
-
-- **爆肝** (baogan) — literally "burst the liver". Working so hard your liver gives out. Universal Taiwanese metaphor for grinding overnight.
-- **責任制** — "responsibility system". Salaried tech labor where overtime is expected, not paid. The Taiwan semicon norm.
-- **484** — PTT slang for *"是不是"* ("isn't it?"). Used to call someone out: *"484 沒看 spec"* = "you didn't read the spec, did you?".
-- **笑死** — "laughing to death". Sarcastic. About 70% of PTT.
-- **加油好嗎** — "try harder, would you?". Passive-aggressive encouragement.
-- **GG** — game over. Taiwan internet slang for "we're done".
-- **原 po** — "original poster". PTT-canonical way to address the OP.
-- **yield** — semiconductor manufacturing term. Used metaphorically in `fab` style.
-- **NYCU** — National Yang Ming Chiao Tung University, where the maintainer studies.
+如果你看 tanweai/pua 看得很煩躁，覺得「我又不是阿里 P8」、「為什麼要被馬斯克 hardcore」、「Mama 模式有夠中國」… baogan 大概比較合你胃口。
 
 ## License
 
