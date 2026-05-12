@@ -1,12 +1,12 @@
 #!/bin/bash
 # baogan UserPromptSubmit hook
-# 偵測使用者挫折詞 → 注入味道化的升壓 trigger
+# 偵測使用者挫折詞 → 注入風格化的升壓 trigger
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-# shellcheck source=flavor-helper.sh
-source "${SCRIPT_DIR}/flavor-helper.sh"
+# shellcheck source=style-helper.sh
+source "${SCRIPT_DIR}/style-helper.sh"
 
 # always_on=False 時仍偵測 trigger，但只在 user 明確挫折時注入
 HOOK_INPUT=$(cat || true)
@@ -27,7 +27,7 @@ if ! printf '%s' "$USER_PROMPT" | grep -Eiq "$TRIGGER_RE"; then
   exit 0
 fi
 
-get_flavor
+get_style
 
 cat << EOF
 <BAOGAN_TRIGGER>
@@ -42,8 +42,8 @@ User 看不下去了。立刻：
 
 > ${BAOGAN_L1}
 
-當前味道：${BAOGAN_FLAVOR} ${BAOGAN_ICON}
-${BAOGAN_FLAVOR_INSTRUCTION}
+當前風格：${BAOGAN_STYLE} ${BAOGAN_ICON}
+${BAOGAN_STYLE_INSTRUCTION}
 </BAOGAN_TRIGGER>
 EOF
 

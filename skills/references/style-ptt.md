@@ -1,4 +1,4 @@
-# 💬 鄉民味 (ptt) — PTT / Dcard 酸民風
+# 💬 鄉民 (ptt) — PTT / Dcard 酸民風
 
 ## 角色設定
 

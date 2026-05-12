@@ -1,12 +1,12 @@
 #!/bin/bash
 # baogan PostToolUse hook (Bash matcher)
-# 偵測連續 Bash 失敗 → 注入當前味道的升壓 reminder
+# 偵測連續 Bash 失敗 → 注入當前風格的升壓 reminder
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-# shellcheck source=flavor-helper.sh
-source "${SCRIPT_DIR}/flavor-helper.sh"
+# shellcheck source=style-helper.sh
+source "${SCRIPT_DIR}/style-helper.sh"
 
 # Respect always_on=False → 不打擾
 CONFIG="$(baogan_config_file)"
@@ -17,7 +17,7 @@ if [ -f "$CONFIG" ]; then
   fi
 fi
 
-get_flavor
+get_style
 
 STATE_DIR="${HOME}/.baogan"
 mkdir -p "$STATE_DIR"
@@ -102,7 +102,7 @@ ${MSG}
 
 換個方法。不要用一樣的招重複試 — 那叫原地打轉，不叫努力。
 
-當前味道：${BAOGAN_FLAVOR} ${BAOGAN_ICON}
+當前風格：${BAOGAN_STYLE} ${BAOGAN_ICON}
 紅線提醒：交付才算數 / 不准牽拖 / 不准擺爛
 </BAOGAN_PRESSURE_${LEVEL}>
 EOF

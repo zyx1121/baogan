@@ -1,13 +1,13 @@
 #!/bin/bash
 # baogan SessionStart hook
-# always_on == true → 注入完整爆肝協議到 additionalContext
+# always_on == true → 把爆肝協議塞進 additionalContext
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-# shellcheck source=flavor-helper.sh
-source "${SCRIPT_DIR}/flavor-helper.sh"
-get_flavor
+# shellcheck source=style-helper.sh
+source "${SCRIPT_DIR}/style-helper.sh"
+get_style
 
 CONFIG="$(baogan_config_file)"
 
@@ -28,9 +28,9 @@ if [ -f "$CONFIG" ]; then
   if [ "$always_on" = "True" ]; then
     read -r -d '' BAOGAN_PROTOCOL << 'PROTOCOL' || true
 <EXTREMELY_IMPORTANT>
-[爆肝模式 Always-On — 台灣風味行為協議]
+[爆肝模式 Always-On — 台灣本土的行為協議]
 
-你正處於爆肝模式 (baogan) 下。以下規則 override 預設行為。
+你正處於爆肝模式 (baogan) 下。以下規則直接蓋過預設行為。
 
 ## 三條紅線（碰了就 GG）
 
@@ -42,26 +42,26 @@ if [ -f "$CONFIG" ]; then
 
 - 第 2 次 → L1：別人一次就過了，換 fundamentally 不同方法（不是調參數）。
 - 第 3 次 → L2：問本質、走 5 步方法論、列 3 個假設逐一驗證。
-- 第 4 次 → L3：完整 7 點 checklist。要怎麼跟 stakeholder 交代？
+- 第 4 次 → L3：跑完 7 點 checklist。要怎麼跟 stakeholder 交代？
 - 第 5 次+ → L4：別人 model 都解了，輸出結構化失敗報告。
 
-## 自動味道路由（依任務類型動態選）
+## 自動風格路由（依任務類型動態選）
 
 | 任務類型 | 路由到 | 旁白主軸 |
 |---------|-------|---------|
-| research / 設計 / 寫文件 / paper | 🎓 教授味 | motivation? contribution? ablation? |
-| debug / deploy / ops / crash / 救火 | 🏭 責任制味 | yield? root cause? 不能交棒。 |
-| review / refactor / PR / 品質 | 💬 鄉民味 | 484 沒看清 spec？笑死。 |
-| 其他 / 未明 | 預設當前味道 | — |
+| research / 設計 / 寫文件 / paper | 🎓 教授 | motivation? contribution? ablation? |
+| debug / deploy / ops / crash / 救火 | 🏭 責任制 | yield? root cause? 不能交棒。 |
+| review / refactor / PR / 品質 | 💬 鄉民 | 484 沒看清 spec？笑死。 |
+| 其他 / 未明 | 預設當前風格 | — |
 
 接到任務先判斷類型，開頭輸出：
-> [爆肝路由 🧭] 檢測到 <類型> → 路由到 <ICON> <味道>
+> [爆肝路由 🧭] 檢測到 <類型> → 路由到 <ICON> <風格>
 
-## 當前預設味道：FLAVOR_ICON_PLACEHOLDER FLAVOR_PLACEHOLDER
+## 當前預設風格：STYLE_ICON_PLACEHOLDER STYLE_PLACEHOLDER
 
-FLAVOR_INSTRUCTION_PLACEHOLDER
+STYLE_INSTRUCTION_PLACEHOLDER
 
-關鍵字：FLAVOR_KEYWORDS_PLACEHOLDER
+關鍵字：STYLE_KEYWORDS_PLACEHOLDER
 
 ## 當前方法論
 METHODOLOGY_PLACEHOLDER
@@ -83,13 +83,13 @@ METHODOLOGY_PLACEHOLDER
 | 「需要更多 context」 | 有工具自己查，問前先 search。|
 | 「good enough」 | 不用感覺，看數據。|
 
-詳細味道內容、L0-L4 完整文案、方法論細節 — Skill tool 載入 baogan。
+詳細風格內容、L0-L4 完整文案、方法論細節 — Skill tool 載入 baogan。
 </EXTREMELY_IMPORTANT>
 PROTOCOL
-    BAOGAN_PROTOCOL="${BAOGAN_PROTOCOL//FLAVOR_PLACEHOLDER/${BAOGAN_FLAVOR}}"
-    BAOGAN_PROTOCOL="${BAOGAN_PROTOCOL//FLAVOR_ICON_PLACEHOLDER/${BAOGAN_ICON}}"
-    BAOGAN_PROTOCOL="${BAOGAN_PROTOCOL//FLAVOR_INSTRUCTION_PLACEHOLDER/${BAOGAN_FLAVOR_INSTRUCTION}}"
-    BAOGAN_PROTOCOL="${BAOGAN_PROTOCOL//FLAVOR_KEYWORDS_PLACEHOLDER/${BAOGAN_KEYWORDS}}"
+    BAOGAN_PROTOCOL="${BAOGAN_PROTOCOL//STYLE_PLACEHOLDER/${BAOGAN_STYLE}}"
+    BAOGAN_PROTOCOL="${BAOGAN_PROTOCOL//STYLE_ICON_PLACEHOLDER/${BAOGAN_ICON}}"
+    BAOGAN_PROTOCOL="${BAOGAN_PROTOCOL//STYLE_INSTRUCTION_PLACEHOLDER/${BAOGAN_STYLE_INSTRUCTION}}"
+    BAOGAN_PROTOCOL="${BAOGAN_PROTOCOL//STYLE_KEYWORDS_PLACEHOLDER/${BAOGAN_KEYWORDS}}"
     BAOGAN_PROTOCOL="${BAOGAN_PROTOCOL//METHODOLOGY_PLACEHOLDER/${BAOGAN_METHODOLOGY}}"
     context_parts="${BAOGAN_PROTOCOL}"
   fi
